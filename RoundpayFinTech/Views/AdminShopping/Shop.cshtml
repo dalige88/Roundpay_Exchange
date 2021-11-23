@@ -1,0 +1,203 @@
+﻿@model IEnumerable<RoundpayFinTech.AppCode.Model.Shopping.ShoppingMenu>
+@{
+    ViewData["Title"] = "Shop";
+    int[] catId = new int[Model.Count()];
+    int count = 0;
+    var menuType = Model.First().MenuType;
+}
+<link href="~/css/themify-icons.css" rel="stylesheet" />
+<link href="~/css/jquery.mmenu.css" rel="stylesheet" />
+<link href="~/css/style.css" rel="stylesheet" />
+<link href="~/css/responsive.css" rel="stylesheet" />
+<link href="~/css/Shopping.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.css">
+
+<div aria-label="breadcrumb" class="breadcrumb" id="page-header">
+    <div class="container-fluid">
+        <h6 class="float-left text-white"><i class="fa fa-users"></i> @ViewData["Title"]</h6>
+        <ol class="breadcrumb float-right">
+            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+            <li class="breadcrumb-item">Shopping</li>
+            <li class="breadcrumb-item active">@ViewData["Title"]</li>
+        </ol>
+    </div>
+</div>
+<div id="__p" class="main-temp-body">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mt-2">
+                    <div class="card-header bg-greenhead text-white">
+                        <div class="row">
+                            <div class="col-sm-10">
+                                <a href="/shop" class="text-monospace text-white"><i class="fa fa-home pr-2"></i>Home</a>
+                            </div>
+                            <div class="col-sm-2 text-right">
+                                <a href="javascript:void(0)" onclick="CartDetail();" class="btn btn-outline-light border-0" style="background:none!important">
+                                    <span id="btnCartDeatil"><i class="fas fa-cart-plus"></i> <sup id="CartCount">0</sup></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body cus-shop-card-bdy pb-0">
+                        <div class="row">
+                            <div class="col-sm-3 border-right">
+                                <!--Collapsible Menu-->
+                                <div class="sticker header-bottom">
+                                    <div class="container-fluid p-0">
+                                        <div class="row align-items-center" style="background: #373673">
+                                            <div class="col-sm-12 p-0">
+                                                @*---------------------------*@
+                                                <script>
+                                                    var categories = [];
+                                                    var catId = 0;
+                                                </script>
+                                                <div id="v_nav">
+                                                    <button class="collapsible vm-menu">All Departments</button>
+                                                    <div class="content">
+                                                        <ul class="navigation">
+                                                            <!-------------Start Home --------------->
+                                                            @*<li>
+                                                                    <a href="#" class="hvr-border"><i class="fa fa-sitemap" aria-hidden="true"></i>All Departments</a>
+                                                                </li>*@
+                                                            @foreach (var Category in Model)
+                                                            {
+                                                                <script>
+                                                                    categories.push(@Category.CategoryID)
+                                                                </script>
+                                                                @if (menuType == 2)
+                                                                {
+                                                                    @if (Category.MenuLevel1.Any())
+                                                                    {
+                                                                        @foreach (var Level1 in Category.MenuLevel1)
+                                                                        {
+                                                                            <li>
+                                                                                <a href="javascript:void(0);" class="hvr-border">
+                                                                                    <img src="/image/icon/shopping/@Html.Raw(Category.CategoryID+".png")" style="height:30px;padding:0 5px" />@Level1.SubCategoryName<span class="main_links_span"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+                                                                                </a>
+                                                                                @if (Level1.MenuLevel2.Any())
+                                                                                {
+                                                                                    <div class="typography_6_colm">
+                                                                                        <div class="colm_6_container" id="list-lft">
+                                                                                            <div class="row h-100">
+                                                                                                <div class="col">
+                                                                                                    <ol class="list-margin">
+                                                                                                        @foreach (var Level2 in Level1.MenuLevel2)
+                                                                                                        {
+                                                                                                            <li>
+                                                                                                                <a data-Category-Id="@Category.CategoryID" data-SubCategory-Id1="@Level1.SubCategoryID" data-SubCategory-Id2="@Level2.SubCategoryIDLvl2" class="subCategoryId2">@Level2.SubCategoryNameLvl2</a>
+                                                                                                            </li>
+                                                                                                        }
+                                                                                                    </ol>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                }
+                                                                            </li>
+                                                                        }
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    <li>
+                                                                        <a href="javascript:void(0);" class="hvr-border">
+                                                                            <img src="/image/icon/shopping/@Html.Raw(Category.CategoryID+".png")" style="height:30px;padding:0 5px" />@Category.CategoryName<span class="main_links_span"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+                                                                        </a>
+
+                                                                        @if (Category.MenuLevel1.Any())
+                                                                        {
+                                                                            <div class="typography_6_colm">
+                                                                                <div class="colm_6_container" id="list-lft">
+                                                                                    <div class="row h-100">
+                                                                                        @foreach (var Level1 in Category.MenuLevel1)
+                                                                                        {
+                                                                                            @if (Level1.MenuLevel2.Any())
+                                                                                            {
+                                                                                                <div class="col">
+                                                                                                    <p class="title">@Level1.SubCategoryName</p>
+                                                                                                    <ol class="list-margin">
+                                                                                                        @foreach (var Level2 in Level1.MenuLevel2)
+                                                                                                        {
+                                                                                                            <li>
+                                                                                                                <a data-Category-Id="@Category.CategoryID" data-SubCategory-Id1="@Level1.SubCategoryID" data-SubCategory-Id2="@Level2.SubCategoryIDLvl2" class="subCategoryId2">@Level2.SubCategoryNameLvl2</a>
+                                                                                                            </li>
+                                                                                                        }
+                                                                                                    </ol>
+                                                                                                </div>
+                                                                                            }
+                                                                                        }
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        }
+                                                                    </li>
+                                                                }
+
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--End-->
+                            </div>
+                            <div class="col-sm-9" id="divMainRender">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src="~/js/jquery.mmenu.js"></script>
+    <script src="~/js/main.js"></script>
+    <script src="~/js/Shopping/ShoppingCategory.js"></script>
+    <script src="~/js/Shopping/ShoppingJS.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.js"></script>
+
+    @*<script>
+             //$(document).ready(function ("max-width: 736px") {
+             //    $(".collapsible").click(function () {
+             //        $(".content").slideToggle("300");
+             //    });
+             //})
+        // </script>*@
+    <script>
+        $('.subCategoryId2').unbind().click(e => {
+            let param = {
+                CategoryID: $(e.currentTarget).data().categoryId,
+                SubCategoryID1: $(e.currentTarget).data().subcategoryId1,
+                SubCategoryID2: $(e.currentTarget).data().subcategoryId2
+            };
+            FilterProduct(param);
+            GetFilters($(e.currentTarget).data().categoryId, $(e.currentTarget).data().subcategoryId1, $(e.currentTarget).data().subcategoryId2);
+        });
+
+        //$('#btnCartDeatil').click(() => {
+        //    console.log('in');
+        //    CartDetail();
+        //});
+
+        (() => {
+            $(".collapsible").click(function () {
+                $(".content").slideToggle("300");
+            });
+
+            $('#divMainRender').html('<div class="row"><div class="col-md-12"><div id="divTrending"></div></div><div class="col-md-12"><div id="divNew"></div></div><div class="col-md-12"><div id="renderProducts"></div></div></div>')
+            loadProductTrending();
+            loadProductNewArrival();
+            $.each(categories, function (index, item) {
+                loadProduct(item, 0, 0);
+                preloader.remove();
+            });
+            ItemInCart();
+        })();
+    </script>
+}

@@ -1,0 +1,323 @@
+﻿@model LoginPageModel
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+    string WID = Convert.ToString(ViewData["WID"]);
+    string ThemeID = "t" + Convert.ToString(ViewData["Theme"]);
+    string appName = "";
+}
+@if (ThemeID != "t4")
+{
+    <div class="container">
+        <div class="mh-7 m-0">
+            <marquee direction="left"><p id="divNews" class="text-white mt-2" style="font-size: 18px;"></p></marquee>
+        </div>
+        <div class="login-form">
+            <div class="login-border">
+                <div class="row">
+                    <div class="col-md-7 d-sm-none d-none d-md-block">
+                        <div class="d-flex justify-content-left m-3">
+                            <img src="@ViewData["Host"]/Image/Website/@WID/@ThemeID/services.png" class="w-80" />
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="login-section h-100">
+                            <div class="d-flex flex-row-reverse h-100 ">
+                                <div class="user_card">
+                                    <div class="d-flex justify-content-center">
+                                        <div class="logo d-flex justify-content-center">
+                                            <img src="@ViewData["Host"]/Image/Website/@WID/logo.png" />
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-center form_container">
+                                        <div class="w-75 custome-w-75">
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text"><i class="fa fa-anchor"></i></span>
+                                                </div>
+                                                <select class="custom-select" id="ddlLType">
+                                                    <option value="1">ApplicationUser</option>
+                                                    <option value="2">CustomerCare</option>
+                                                    <option value="3">Employee</option>
+                                                </select>
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                                </div>
+                                                @Html.TextBox("txtUser", null, new { @placeholder = "USER ID", @class = "form-control input_user" })
+                                            </div>
+
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text"><i class="fa fa-key"></i></span>
+                                                </div>
+                                                @Html.Password("txtPassword", null, new { @placeholder = "PASSWORD", @class = "form-control input_pass" })
+                                            </div>
+                                            <div class="form-group">
+                                                <small id="errorMsg" class="text-danger hide"></small>
+                                                <span id="btnResendOTP" class="text-danger hide"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="custom-control">
+                                                    <span style="cursor:pointer" class="forpas" onclick="forgetPopUp()">Forgot password?</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-center mt-2 login_container">
+                                        <button id="btnLogin" type="button" value="LOGIN" class="btn login_btn">Login</button>
+                                    </div>
+                                    <div class="d-flex justify-content-center mt-2 mb-5 login_container">
+                                        @{
+                                            if (ViewData["AppName"] != null)
+                                            {
+                                                appName = ViewData["AppName"].ToString() != "" ? ViewData["AppName"].ToString() + ".apk" : "Recharge.apk";
+                                            }
+                                            else
+                                            {
+                                                appName = "Recharge.apk";
+                                            }
+                                            <a href="/apk/@appName" class="btn android_btn"><i class="fab fa-android pr-2"></i>Download</a>
+                                        }
+                                    </div>
+                                    @if (!ApplicationSetting.IsSingupPageOff)
+                                    {
+                                        <div class="d-flex justify-content-center form_container">
+                                            <div class="form-group">
+                                                <span style="cursor:pointer" class="">
+                                                    Don't have an account
+                                                    <a href="/SignUp" class=""><i class=""></i>Click Here</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <nav class="navbar navbar-expand-md secound-head top-nav">
+        <div class="container">
+            <div class="mh-7 m-0">
+                <marquee direction="left"><p id="divNews" class="text-white mt-2" style="font-size: 18px;"></p></marquee>
+            </div>
+            <div class="navbar-collapse" id="navbarSupportedContent">
+                <a class="navbar-brand logo" href="#">
+                    <img src="@ViewData["Host"]/Image/Website/@WID/logo.png" />
+                </a>
+                <ul class="navbar-nav ml-auto  d-none d-sm-block">
+                    <li class="nav-item ">
+                        <div class="feature-box reverse-allres feature-box-style-2 align-items-center">
+                            <div class="feature-box-icon">
+                                <img src="@ViewData["Host"]/Image/Website/@WID/@ThemeID/cc-info.png" style="width:67px;" />
+                            </div>
+                            <div class="feature-box-info">
+                                <p class="pb-0 font-weight-semibold line-height-5 text-2 mt-4">
+                                    @(Model.CustomerCareMobileNos)<br>
+                                    @(Model.CustomerPhoneNos)
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="login-page">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-10 m-auto col-sm-12 col-12">
+                    <div class="log-box">
+                        <div class="row">
+                            <div class="col-xl-7 col-sm-7 col-12 pad-right-0 d-none d-sm-block">
+                                <div class="logo-back">
+                                    <div class="slider rploginSlide">
+                                        <div class="slide_viewer">
+                                            <div class="slide_group">
+                                                @{
+                                                    if (Model.BGServiceImgURLs != null)
+                                                    {
+                                                        foreach (var item in Model.BGServiceImgURLs)
+                                                        {
+                                                            <div class="slide">
+                                                                <img class="img-fluid" src="@(item.SiteResourceUrl)" />
+                                                            </div>
+                                                        }
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slide_buttons">
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="col-xl-5 col-sm-5 col-12 pad-left-0">
+                                <div class="log-content">
+                                    <h1>LOGIN </h1>
+                                    <div class="log-body">
+                                        <div class="form-group myr-top">
+                                            <select class="custom-select" id="ddlLType">
+                                                <option value="1">ApplicationUser</option>
+                                                <option value="2">CustomerCare</option>
+                                                <option value="3">Employee</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group myr-top">
+                                            @Html.TextBox("txtUser", null, new { @placeholder = "USER ID", @class = "form-control custom input_user" })
+                                        </div>
+                                        <div class="form-group myr-top">
+                                            @Html.Password("txtPassword", null, new { @placeholder = "PASSWORD", @class = "form-control custom input_pass" })
+                                        </div>
+                                        <div class="form-group">
+                                            <small id="errorMsg" class="text-danger hide"></small>
+                                            <span id="btnResendOTP" class="text-danger hide"></span>
+                                        </div>
+                                        <div class="log-btn text-center">
+                                            @*<a href="#" class="btn btn-theme1">Login</a>*@
+                                            <button id="btnLogin" type="button" value="LOGIN" class="btn btn-theme1">Login</button>
+
+                                            @{
+
+                                                if (ViewData["AppName"] != null)
+                                                {
+                                                    appName = ViewData["AppName"].ToString() != "" ? ViewData["AppName"].ToString() + ".apk" : "Recharge.apk";
+                                                }
+                                                else
+                                                {
+                                                    appName = "Recharge.apk";
+                                                }
+                                                <a href="/apk/@appName" class="dwn-apk">Download APK</a>
+                                            }
+                                        </div>
+                                        <div class="log-bottom-cotent">
+                                            <p>
+                                                <span style="cursor:pointer" class="cursor-pointer text-primary" onclick="forgetPopUp()">Forgot Password</span>
+                                                @if (!ApplicationSetting.IsSingupPageOff)
+                                                {
+                                                    <a href="/SignUp" class="text-primary float-right">Sign Up</a>
+                                                }
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section scripts{
+
+    <script src="~/js/validator.js" asp-append-version="true"></script>
+    <script src="~/js/login.js" asp-append-version="true"></script>
+    @if (Model.ThemeID == 4)
+    {
+        <script type="text/javascript">
+            $('.rploginSlide').each(function () {
+                var $this = $(this);
+                var $group = $this.find('.slide_group');
+                var $slides = $this.find('.slide');
+                var bulletArray = [];
+                var currentIndex = 0;
+                var timeout;
+
+                function move(newIndex) {
+                    var animateLeft, slideLeft;
+
+                    advance();
+
+                    if ($group.is(':animated') || currentIndex === newIndex) {
+                        return;
+                    }
+
+                    bulletArray[currentIndex].removeClass('active');
+                    bulletArray[newIndex].addClass('active');
+
+                    if (newIndex > currentIndex) {
+                        slideLeft = '100%';
+                        animateLeft = '-100%';
+                    } else {
+                        slideLeft = '-100%';
+                        animateLeft = '100%';
+                    }
+
+                    $slides.eq(newIndex).css({
+                        display: 'block',
+                        left: slideLeft
+                    });
+                    $group.animate({
+                        left: animateLeft
+                    }, function () {
+                        $slides.eq(currentIndex).css({
+                            display: 'none'
+                        });
+                        $slides.eq(newIndex).css({
+                            left: 0
+                        });
+                        $group.css({
+                            left: 0
+                        });
+                        currentIndex = newIndex;
+                    });
+                }
+
+                function advance() {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(function () {
+                        if (currentIndex < ($slides.length - 1)) {
+                            move(currentIndex + 1);
+                        } else {
+                            move(0);
+                        }
+                    }, 4000);
+                }
+
+                $('.next_btn').on('click', function () {
+                    if (currentIndex < ($slides.length - 1)) {
+                        move(currentIndex + 1);
+                    } else {
+                        move(0);
+                    }
+                });
+
+                $('.previous_btn').on('click', function () {
+                    if (currentIndex !== 0) {
+                        move(currentIndex - 1);
+                    } else {
+                        move(3);
+                    }
+                });
+
+                $.each($slides, function (index) {
+                    var $button = $('<a class="slide_btn">•</a>');
+
+                    if (index === currentIndex) {
+                        $button.addClass('active');
+                    }
+                    $button.on('click', function () {
+                        move(index);
+                    }).appendTo('.slide_buttons');
+                    bulletArray.push($button);
+                });
+
+                advance();
+            });</script>
+    }
+}
+

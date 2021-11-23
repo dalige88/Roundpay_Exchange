@@ -1,0 +1,268 @@
+﻿@model RoundpayFinTech.Models.SattlementAccountModels
+@{
+    ViewData["Title"] = "Redeem";
+}
+<input id="hidId" type="hidden" value="@Model.LoginID" />
+<div aria-label="breadcrumb" class="breadcrumb" id="page-header">
+    <div class="container-fluid">
+        <h5 class="float-left"><i class="fa fa-users"></i> @ViewData["Title"]</h5>
+        <ol class="breadcrumb float-right">
+            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+            <li class="breadcrumb-item">User Report</li>
+            <li class="breadcrumb-item active">@ViewData["Title"]</li>
+        </ol>
+    </div>
+</div>
+<div class="__p main-temp-body">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mt-2">
+                    <div class="card-header bg-gradientorange text-white">
+                        <i class="fas fa-link"></i> @ViewData["Title"]
+                        <a href="javascript:addNewAccountWin()" class="float-right"><i class="fas fa-plus-square" style="font-size:medium"></i></a>
+                    </div>
+                    <div class="card-body pt-2">
+                        <div class="row d-none" id="entryForm">
+                            <div class="col-sm-12 form-group">
+                                @Html.Label("ddlBank", "Bank", new { @class = "lbl" })
+
+                                <select class="form-control ddlBank12" onchange="SelectIfsc(this)" id="ddlBank1" aria-describedby="BankHelp1" asp-items="@Model.Bankselect">
+                                    <option value=0>:: Choose Bank ::</option>
+                                </select>
+                                <small id="BankHelp1" class="form-text text-muted d-none"></small>
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <label class="lbl" for="txtIfsc">IFSC</label>
+                                <input aria-describedby="txtIfsc" maxlength="16" class="form-control" id="txtIFSC" placeholder="Enter IFSC Code" tabindex="2" type="text" value="">
+                                <small id="txtIfsc" class="form-text text-muted d-none"></small>
+                                <small class="form-text text-muted">(Verify Ifsc Code Before Save.) </small>
+
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <label class="lbl" for="txtTrID">Account Number </label>
+                                <input aria-describedby="minAmt1" class="form-control" placeholder="Enter Account Number." id="txtAccountNumber1" name="Amt" tabindex="2" type="text">
+                                <small id="minAmt1" class="form-text text-muted d-none"></small>
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <label class="lbl" for="txtTrID">Account Holder Name </label>
+                                <input aria-describedby="AccountHol" class="form-control" placeholder="Enter Account Name." id="AccountHolderName1" tabindex="2" type="text">
+                                <small id="AccountHol" class="form-text text-muted d-none"></small>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <button id="btnSaveAccount" tabindex="6" class="btn btn-outline-dark">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 pb-4">
+                            <bankGrid></bankGrid>
+                        </div>
+                        <div class="col-sm-12 table-responsive">
+                            <transactionGrid></transactionGrid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            bankList();
+            loadReport();
+            $('#btnSaveAccount').click(function () {
+                var ctCv = { ddlbank: $("#ddlBank1"), ifsc: $("#txtIFSC"), accnum: $("#txtAccountNumber1"), accname: $("#AccountHolderName1") }
+                var IsE = {
+                    ddlbank: ctCv.ddlbank.val() == 0,
+                    ifsc: ctCv.ifsc.val() == "",
+                    accnum: ctCv.accnum.val() == "",
+                    accname: ctCv.accname.val() == ""
+                }
+                IsE.err = (IsE.ddlbank || IsE.ifsc || IsE.accnum || IsE.accname)
+                $v.showErrorFor(ctCv.ddlbank, 'Please select Bank.', IsE.ddlbank);
+                $v.showErrorFor(ctCv.ifsc, 'Please Fill IFSC.', IsE.ifsc);
+                $v.showErrorFor(ctCv.accnum, 'Please Fill Account Number.', IsE.accnum);
+                $v.showErrorFor(ctCv.accname, 'Please Fill Account Holder Name.', IsE.accname);
+                if (IsE.err) {
+                    return false;
+                }
+                var dprt = {
+                    UserID: $("#hidId").val(),
+                    BankID: ctCv.ddlbank.val().split('~')[0],
+                    BankName: ctCv.ddlbank.find("option:selected").text(),
+                    IFSC: ctCv.ifsc.val().trim(),
+                    AccountNumber: ctCv.accnum.val().trim(),
+                    AccountHolder: ctCv.accname.val().trim()
+                }
+                preloader.load();
+                $.ajax({
+                    type: 'POST',
+                    url: '/SettlementaccountEdit',
+                    data: JSON.stringify(dprt),
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (result) {
+                        an.title = result.statuscode == an.type.success ? 'Success' : 'Oops';
+                        an.content = result.msg;
+                        an.alert(result.statuscode);
+                        if (result.statuscode == an.type.success) {
+                            ctCv.ddlbank.val(0)
+                            ctCv.ifsc.val("")
+                            ctCv.accnum.val("")
+                            ctCv.accname.val("")
+                            partialGrid();
+                        }
+                    },
+                    statusCode: {
+                        500: function () {
+                            an.title = 'Oops';
+                            an.content = 'Server error';
+                            an.alert(an.type.failed);
+                        },
+                        0: function () {
+                            an.title = 'Oops';
+                            an.content = 'Internet Connection was broken';
+                            an.alert(an.type.failed);
+                        }
+                    },
+                    error: function (xhr, result, msg) {
+                        an.title = "Oops";
+                        an.content = msg;
+                        an.alert(an.type.failed);
+
+                        preloader.remove();
+                    },
+                    complete: function () {
+
+                        preloader.remove();
+                    }
+                });
+            })
+        });
+        const bankList = () => {
+            let id = $("#hidId").val();
+            $.post('/Report/SettlementaccountList', { UserID: id })
+                .done(result => {
+                    if (result.length > 0) {
+                        let _html = '';
+                        let _btnRedeem = '';
+                        for (let i = 0; i < result.length; i++) {
+                            switch (result[i].verificationStatus){
+                                case 0: _btnRedeem = `<a tabindex="6" onclick="verifyAccountUser(${result[i].id},this)" class="btn btn-info btn-sm btnEditCard">Verify</a>`;
+                                    break;
+                                case 1: _btnRedeem = `<a tabindex="6" onclick="getUTR(${result[i].id},${result[i].verificationStatus})" class="btn btn-info btn-sm btnEditCard">Verify UTR</a>`;
+                                    break;
+                                case 2: _btnRedeem = `<a class="btn btn-sm btn-outline-info redeemFund"><i class="fas fa-university"></i> Redeem</a>`;
+                                    break;
+                            }
+                            _html += `<div class="card" style="width: 18rem;">
+                                                    <div class="card-body" data-bank-id="${result[i].id}">
+                                                        <p class="card-text">
+                                                            <span class="d-block"><strong>Bank : </strong> ${result[i].bankName}</span>
+                                                            <span class="d-block"><strong>Account Holder : </strong>${result[i].accountHolder}</span>
+                                                            <span class="d-block"><strong>Account Number : </strong>${result[i].accountNumber}</span>
+                                                            <span class="d-block"><strong>IFSC : </strong>${result[i].ifsc}</span>
+                                                        </p>
+                                                        <a class="btn btn-sm btn-outline-info removeBank"><i class="fas fa-trash-alt"></i> Delete</a>
+                                                        ${_btnRedeem}
+                                                    </div>
+                                                </div>`
+                        }
+                        $('bankGrid').html(_html);
+                        $('.removeBank').unbind().click(e => removeBank(e));
+                        $('.redeemFund').unbind().click(() => UserMyWallet());
+                    }
+                })
+                .fail(xhr => {
+                    an.title = 'Oops';
+                    an.content = xhr.status == 0 ? 'Internet Connection was broken' : 'Server error';
+                    an.alert(an.type.failed);
+                })
+        };
+
+        const addNewAccountWin = () => {
+            let _html = $('#entryForm').html();
+            mdlA.id = 'newWin';
+            mdlA.title = 'Add';
+            mdlA.content = _html;
+            mdlA.modal(mdlA.size.default);
+        };
+
+        const loadReport = () => {
+            $.post('/Report/SettlementReport').done(result => {
+                if (result.length > 0) {
+                    $('transactionGrid').empty().append(`<table class="table table-bordered">
+                                                                    <thead><tr><th>#</th><th>Bank</th><th>Account</th><th>OpeningBalance</th><th>Amount</th><th>ClosingAmount</th><th>TransactionDate</th><th>Status</th><th>LiveID</th></tr></thead>
+                                                                    <tbody></tbody>
+                                                                 </table>`)
+                        .find('tbody')
+                        .append(result.map((x, i) => `<tr>
+                                                                <td>${i + 1}</td>
+                                                                <td>${x.bankName}</td>
+                                                                <td>${x.accountNumber}</td>
+                                                                <td>${x.openingBalance}</td>
+                                                                <td>${x.amount}</td>
+                                                                <td>${x.closingBalance}</td>
+                                                                <td>${x.transactionDate}</td>
+                                                                <td>${x.type}</td>
+                                                                <td>${x.liveId}</td></tr>`))
+                }
+            })
+        };
+
+        const removeBank = e => {
+            let bankId = $(e.currentTarget).parent('div').data().bankId;
+            $.post('/remove-bank', { ID: bankId })
+                .done(result => {
+                    an.title = result.statuscode == an.type.success ? "Well done" : "Oops";
+                    an.content = result.msg;
+                    an.alert(result.statuscode);
+                    if (result.statuscode == an.type.success) {
+                        $('[data-bank-id="' + bankId + '"]').remove();
+                    }
+                }).fail(xhr => {
+                    an.title = 'Oops';
+                    an.content = xhr.status == 0 ? 'Internet Connection was broken' : 'Server error';
+                    an.alert(an.type.failed);
+                }).always(() => preloader.remove());
+        }
+
+        const verifyAccountUser = function (id, sender) {
+            $(sender).addClass('d-none');
+            preloader.load();
+            an.id = 'alertAccount';
+            an.parent = $('#alertmsg');
+            $.post('/verify-account-user', { id },
+                function (result) {
+                    if (result.statuscode == an.type.failed || result.statuscode == 3) {
+                        an.title = "Oops! Error";
+                        an.content = result.msg;
+                        an.alert(an.type.failed);
+                        $(sender).removeClass('d-none');
+                    }
+                    else {
+                        an.title = "Well done!";
+                        an.content = result.msg;
+                        an.alert(result.statuscode);
+                        partialGrid();
+                    }
+                }).catch(function () {
+                    console.clear();
+                }).fail(function (xhr) {
+                    $(_this).attr('checked', Is == false);
+                    an.title = 'Oops';
+                    an.content = xhr.status === 0 ? 'Internet Connection was broken' : 'Server error';
+                    an.alert(an.type.failed);
+                }).always(function () {
+                    preloader.remove();
+                });
+        }
+
+        function SelectIfsc(ifsc) {
+            $("#txtIFSC").val($(ifsc).val().split('~')[1])
+        }
+    </script>
+}
+

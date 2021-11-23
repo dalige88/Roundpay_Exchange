@@ -1,0 +1,84 @@
+﻿@using RoundpayFinTech.AppCode.Model.ProcModel;
+@model GetAddService
+@{
+    var counter = 1;
+}
+<div class="row">
+    <div class="col-md-12">
+        <button type="button" class="close" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h3>Activate Additional Service</h3>
+        <hr />
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="form-row">
+            <table class="table table-bordered table-striped table-responsive-sm" id="tblAddonService">
+                <thead class="bg-tableth">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Services</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                @if (Model.AddonServList != null)
+                {
+                    if (Model.Statuscode == 1)
+                    {
+                        <tbody>
+                            @foreach (var item in Model.AddonServList)
+                            {
+                                <tr>
+                                    <td>@counter</td>
+                                    <td>@item.DisplayName</td>
+                                    <td>@item.IsActive</td>
+                                    <td>
+                                        <span class="switch switch-sm">
+                                            <input type="checkbox" class="switch" id="isacti_@counter" @Html.Raw(@item.IsActive ? "checked='checked'" : "") data-toggle="tooltip" data-placement="top" data-original-title="@Html.Raw(@item.IsActive ? "De-Activate Service" : "Activate Service")" data-opid="@item.OpTypeID" data-oid="@item.OID" data-outid="@item.OutletID">
+                                            <label for="isacti_@counter"></label>
+                                        </span>
+                                    </td>
+                                </tr>
+                                counter++;
+                            }
+                        </tbody>
+                    }
+                    else
+                    {
+                        <tbody>
+                            <tr>@Html.Raw(@Model.Msg)</tr>
+                        </tbody>
+                    }
+
+                }
+                else
+                {
+                    <tbody>
+                        <tr>No Record Exist!</tr>
+                    </tbody>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    $('input[id^=isacti]').on('change', function () {
+        var outletId = $(this).data().outid;
+        var opTypeID = $(this).data().opid;
+        var oid = $(this).data().oid;
+
+        $.post('/act-add-serv', { outletId: outletId, opTypeId: opTypeID, OID: oid })
+            .done(function (result) {
+                resultReload(result);
+                an.title = result.statuscode == an.type.success ? 'Success' : 'Oops';
+                an.content = result.msg;
+                an.alert(result.statuscode);
+            })
+            .fail(xhr => {
+                an.title = 'Oops';
+                an.content = xhr.status === 0 ? 'Internet Connection was broken' : 'Server error';
+                an.alert(an.type.failed);
+            }).always(() => preloader.remove());
+    });
+</script>

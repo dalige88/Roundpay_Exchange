@@ -1,0 +1,70 @@
+﻿
+.top-navbar {
+    border-bottom: 1px solid #337ab7;
+    background: black;
+}
+.bg-greenhead {
+    background: linear-gradient( 85deg, #2887C8, #2887C8);
+}
+
+.pt-1, .py-1 {
+    padding-top: .25rem !important;
+    color: black;
+}
+
+.breadcrumb-item a, .breadcrumb-item.active {
+    color: #fff;
+}
+.bg-gradientorange {
+    background: linear-gradient( 85deg,#146cb7,#90bce3);
+}
+
+.main-wrapper .breadcrumb {
+    background: #3ca5ed !important;
+    color: #fff;
+}
+.main-wrapper h5 {
+   line-height:1.6!important;
+   margin-bottom:0!important;
+}
+
+
+.bg-purple {
+    background-color: #3ca5ed !important;
+}
+
+.bg-cyan {
+    background: linear-gradient(to left, #33ccff 0%, #015eea 100%);
+}
+
+.bg-red {
+    background: linear-gradient(to left, #f84b68 0%, #f77288 100%);
+}
+
+.bg-yellow {
+    background: linear-gradient(to left, #f76f32 0%, #f0a25c 100%);
+}
+
+.bg-dark {
+    background: linear-gradient(to left, #353b41 0%, #676d73 100%);
+}
+
+.bg-green {
+    background: linear-gradient(to left, #079a6a 0%, #44d2a4 100%);
+}
+
+.bg-blue {
+    background: linear-gradient(to left, #693bba 0%, #8649ee 100%);
+}
+#navbar {
+    background: #518fc5!important;
+}
+#profileImage {
+   
+    background: #518fc5!important;
+    
+}
+.nav-item.show {
+    background: #5184b1!important;
+}
+

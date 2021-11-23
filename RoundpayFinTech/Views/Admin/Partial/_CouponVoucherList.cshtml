@@ -1,0 +1,83 @@
+﻿@model RoundpayFinTech.AppCode.Model.CoupanVoucherReq
+
+@{ 
+    int counter = 0;
+   /// Layout = null;
+}
+<div class="row form-group">
+    <div class="col-md-3 col-sm-3 col-xs-3">
+
+        <label class="lbl" for="" title="For sale">Total Available Coupon</label>
+
+    </div>
+    <div class="col-md-3 col-sm-3 col-xs-3">
+
+        <label class="lbl" for="">@ViewBag.TotalACoupn</label>
+
+    </div>
+
+    <div class="col-md-3 col-sm-3 col-xs-3">
+
+        <label class="lbl" for="ddlApiName">Total Available Amount</label>
+
+    </div>
+    <div class="col-md-3 col-sm-3 col-xs-3">
+
+        <label class="lbl" for="ddlApiName">@ViewBag.TotalAmount </label>
+
+    </div>
+</div>
+<table id="tblsendeno" class="table table-bordered table-striped table-responsive-sm">
+    <thead class="bg-tableth">
+        <tr>
+            <th>#</th>
+            <th>Api Name</th>
+            <th>Coupon Code</th>
+            <th>Amount</th>
+            <th>IsSale</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var mdl in Model.CoupanVoucher)
+        {
+
+        <tr data-item-id="@mdl.ID">
+            <th style="width:1em;" scope="row">@(counter + 1)</th>
+            <td style="width:6em">
+                @mdl.ApiName
+            </td>
+            <td style="width:6em">
+                @mdl.CouponCode
+            </td>
+            <td style="width:6em">
+                @mdl.Amount
+            </td>
+            <td style="width:6em">
+                @mdl.IsSale
+            </td>
+            <td hidden style="width:6em">
+                @mdl.APIID
+            </td>
+            <td hidden style="width:6em">
+                @mdl.VoucherID
+            </td>
+            <td style="width:6em">
+                @if (@mdl.IsSale==false) {
+                    <button tabindex="6" class="btn btn-info btn-sm btnEditCard">Edit</button>
+                }
+            </td>
+        </tr>
+            counter++;
+        }
+    </tbody>
+</table>
+<script>
+    $('.btnEditCard').click(function () {
+        $("#txtCouponCode").val($(this).closest('tr').find("td").eq(1).text().trim());
+        $("#_Amt").val($(this).closest('tr').find("td").eq(2).text().trim());
+       
+        $("#ddlApi").val($(this).closest('tr').find("td").eq(4).text().trim());
+        $("#tblID").val($(this).closest('tr').data().itemId);
+        $("#btnSaveCard").text("Update")
+    });</script>

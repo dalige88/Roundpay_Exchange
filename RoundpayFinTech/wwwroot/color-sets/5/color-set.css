@@ -1,0 +1,74 @@
+﻿.top-navbar {
+    border-bottom: 1px solid #656b71;
+    background: #656b71;
+}
+
+.bg-greenhead {
+    background: linear-gradient( 85deg, #0096a6, #0096a6);
+}
+
+.pt-1, .py-1 {
+    padding-top: .25rem !important;
+    color: black;
+}
+
+.breadcrumb-item a, .breadcrumb-item.active {
+    color: #fff;
+}
+.breadcrumb-item + .breadcrumb-item::before {
+    color: #17a3bb !important;
+    content: "/";
+}
+
+.main-wrapper h5 {
+    line-height: 1.6 !important;
+    margin-bottom: 0 !important;
+}
+
+.main-wrapper .breadcrumb {
+    background: #00768b !important;
+    color: #fff;
+}
+.bg-gradientorange {
+    background: linear-gradient( 85deg,#055b6a,#64b7c7);
+}
+
+.bg-purple {
+    background-color: #00768b !important;
+}
+
+.bg-cyan {
+    background: linear-gradient(to left, #33ccff 0%, #015eea 100%);
+}
+
+.bg-red {
+    background: linear-gradient(to left, #f84b68 0%, #f77288 100%);
+}
+
+.bg-yellow {
+    background: linear-gradient(to left, #f76f32 0%, #f0a25c 100%);
+}
+
+.bg-dark {
+    background: linear-gradient(to left, #353b41 0%, #676d73 100%);
+}
+
+.bg-green {
+    background: linear-gradient(to left, #079a6a 0%, #44d2a4 100%);
+}
+
+.bg-blue {
+    background: linear-gradient(to left, #693bba 0%, #8649ee 100%);
+}
+#navbar {
+    background: #4bd2e9 !important;
+}
+#profileImage {
+    
+   
+    background: #4bd2e9!important;
+   
+}
+.nav-item.show {
+    background: #178b9f!important;
+}

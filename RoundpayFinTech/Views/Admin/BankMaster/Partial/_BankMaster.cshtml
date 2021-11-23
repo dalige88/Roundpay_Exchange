@@ -1,0 +1,42 @@
+﻿@model IEnumerable<RoundpayFinTech.AppCode.Model.ProcModel.Bank>
+@{ int i = 1;}
+@foreach (var item in Model)
+{
+    var bankLogo = "~/image/BankLogo/" + item.BankID + ".png";
+
+    <tr data-item-id="@item.ID">
+        <th>@i</th>
+        <td>
+            <div class="btn-group dropup">
+                <a href="#" id="act_@i" class="btn btn-outline-dark btn-sm btn-block dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expaned="false"></a>
+                <div class="dropdown-menu" aria-labelledby="act_@i">
+                    <h6 class="dropdown-header">Action Menu</h6>
+                    <a href="#" class="dropdown-item">Edit</a>
+                    <a href="#" class="dropdown-item">Delete</a>
+                </div>
+            </div>
+        </td>
+        <td>@item.BankName</td>
+        <td>@item.BranchName</td>
+        <td>@item.AccountHolder</td>
+        <td>@item.AccountNo</td>
+        <td>@item.IFSCCode</td>
+        <td>@item.Remark</td>
+
+        <td class="align-middle text-center">
+            <img src="@bankLogo" style="width:75px;" alt="No Image" asp-append-version="true" />
+        </td>
+        <td class="align-middle text-center">
+            @{
+                var QRLogo = item.ISQRENABLE && !string.IsNullOrEmpty(item.QRPath) && item.QRPath.Contains(".") ? "~/image/BankQR/" + item.QRPath : "~/image/BankQR/NOQR.png";
+
+            }
+            <div class="row">
+                <div class="col-sm-12">
+                    <img src="@QRLogo" class="img-fluid" style="max-width:72%" alt="No" asp-append-version="true" />
+                </div>
+            </div>
+        </td>
+    </tr>
+    i++;
+}

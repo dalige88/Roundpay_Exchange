@@ -1,0 +1,42 @@
+[
+  {
+    "WId": 0,
+    "ThemeID": 1,
+    "ColorID": 4
+  },
+  {
+    "WId": 0,
+    "ThemeID": 2,
+    "ColorID": 1
+  },
+  {
+    "WId": 0,
+    "ThemeID": 3,
+    "ColorID": 5
+  },
+  {
+    "WId": 0,
+    "ThemeID": 4,
+    "ColorID": 1
+  },
+  {
+    "WId": 1,
+    "ThemeID": 3,
+    "ColorID": 1
+  },
+  {
+    "WId": 1,
+    "ThemeID": 0,
+    "ColorID": 0
+  },
+  {
+    "WId": 1,
+    "ThemeID": 1,
+    "ColorID": 1
+  },
+  {
+    "WId": 1,
+    "ThemeID": 2,
+    "ColorID": 2
+  }
+]

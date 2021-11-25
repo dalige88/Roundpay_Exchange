@@ -12,7 +12,7 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="~/images/favicons/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-    @if (ViewData["Title"].ToString() == PageTitle.Whatsapp)
+    @if (ViewData["Title"]?.ToString() == PageTitle.Whatsapp)
     {
         @RenderSection("icon", false)
     }
@@ -263,6 +263,8 @@
                             <a href="/PackageMaster" class="dropdown-item">Package Master</a>
                         }
                         <a href="/SlabCommissionSetting" class="dropdown-item">Channel Slab Bulk Setting</a>
+                        <a href="/BuyerCommissionDetail" class="dropdown-item">Buyer Commission Detail</a>
+                        <a href="/SellerCommissionDetail" class="dropdown-item">Seller Commission Detail</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">

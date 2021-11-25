@@ -1,0 +1,120 @@
+﻿
+@{
+    ViewData["Title"] = "Commission Detail";
+}
+@{
+    <style type="text/css">
+        .cus_dropdown a {
+            font-size: 13px;
+        }
+
+        .custable_responsive {
+            min-height: 350px !important;
+        }
+    </style>
+}
+<div aria-label="breadcrumb" class="breadcrumb" id="page-header">
+    <div class="container-fluid">
+        <h5 class="float-left"><i class="fa fa-users"></i> @ViewData["Title"]</h5>
+        <ol class="breadcrumb float-right">
+            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+            <li class="breadcrumb-item">Commission</li>
+            <li class="breadcrumb-item active">Commission Detail</li>
+        </ol>
+    </div>
+</div>
+<div id="__p" class="main-temp-body">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="card mt-2">
+                <div class="card-header bg-gradientorange text-white pb-1 pt-1">
+                    <div class="row">
+                        <div class="col-sm-8 text-monospace">
+                            <i class="fas fa-link"></i> CommissionDetail
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+
+                                <div class="input-group-append">
+                                    <button id="btnNew" class="btn btn-outline-light btn-sm font-bold text-monospace pl-3 pr-3">New</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-1">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- Call Partial view here -->
+                            <BList></BList>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @section scripts{
+    <script>
+
+        $(document).ready(function () { loadPartial1() });
+        $('#btnNew').click(function () {
+          
+            $.get('/_BuyerCommissionInsert/0')
+                    .done(function (result) {
+                        mdlA.title = "Buyer Commission Insert"
+                        mdlA.content = result;
+                        mdlA.id = '1mymodal';
+                        mdlA.options.backdrop = 'static';
+                        mdlA.modal(mdlA.size.default);
+                    })
+                    .catch(function (xhr, e, msg) {
+                        an.title = 'Oops';
+                        an.content = 'An error has been occured during request.Reload again!'
+                        an.alert(an.type.failed);
+                    })
+                    .fail(function (xhr) {
+                        if (xhr.status == 500) {
+                            an.title = 'Oops';
+                            an.content = 'Server error';
+                            an.alert(an.type.failed);
+                        }
+                        if (xhr.status == 0) {
+                            an.title = 'Oops';
+                            an.content = 'Internet Connection was broken';
+                            an.alert(an.type.failed);
+                        }
+                    })
+                    .always(function () {
+                        preloader.remove();
+                    });
+
+
+           
+
+
+
+        })
+
+
+        var loadPartial1 = () => {
+            $.post("/BuyerCommissionDetailList").done(result => $('BList').html(result)).fail(() => {
+                an.title = 'Oops';
+                an.content = xhr.status == 500 ? 'Server error' : 'Internet Connection was broken';
+                an.alert(an.type.failed);
+            }).always(() => { mdlA.dispose() });
+        };
+
+
+        
+
+
+
+
+
+    </script>
+
+    }

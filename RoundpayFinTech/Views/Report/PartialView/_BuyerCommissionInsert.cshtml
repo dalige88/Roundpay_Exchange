@@ -1,0 +1,167 @@
+﻿@model RoundpayFinTech.AppCode.Model.Exchange.BuyerCommission
+
+
+
+<div class="col-md-12">
+    <input aria-describedby="Ind" class="form-control col-md-6 " hidden id="Id" name="Id" placeholder="Enter " tabindex="1" type="text" value="@Model.Id">
+    <input aria-describedby="Ind" class="form-control col-md-6 " hidden id="BuyerId" name="BuyerId" placeholder="Enter " tabindex="1" type="text" value="@Model.BuyerId">
+    <div class="form-group" style="position: relative; left: -1em;">
+        <label class="lbl" for="txtMembershipName">Index</label>
+        <input aria-describedby="Ind1" class="form-control col-md-6" id="Ind" name="Ind" placeholder="Enter " tabindex="1" type="text" value="@Model.Ind">
+        <small id="Ind1" class="form-text text-muted d-none"></small>
+        <input type="hidden" id="hid" value="" class="d-none" />
+    </div>
+
+    <div class="form-group col-md-6">
+
+
+        <label class="lbl" for="">Choose Operator</label>
+        @{
+            var list = new SelectList(Model.OpDetail, "OID", "Name");
+            <select aria-describedby="helpBL" class="form-control" id="OID" tabindex="4" asp-items="@list" asp-for="@Model.OID">
+                <option value="0"> :: Select Op :: </option>
+            </select>
+
+        }
+
+        <small id="helpBL" class="form-text text-muted d-none"></small>
+    </div>
+    <div class="form-group" style="position: relative; left: -1em;">
+        <label class="lbl" for="txtMembershipName"> Denomination</label>
+
+        <div class="row mt-3">
+            @foreach (var itm in Model.denominationsoucher)
+            {
+
+                <div class="form-check col-md-4 my-check">
+                    <input type="checkbox" class="chkDenomination" value="@itm.DenominationID">
+                    <label class="form-check-label" for="exampleCheck1">@itm.DenminationAmount</label>
+                </div>
+
+            }
+
+        </div>
+        <div class="form-group" style="position: relative; left: -1em;">
+            <label class="lbl" for="txtMembershipName"> Min</label>
+            <input aria-describedby="Min1" class="form-control col-md-12" id="Min" name="Min" placeholder="Enter Min" tabindex="1" type="text" value="@Model.Min">
+            <small id="Min1" class="form-text text-muted d-none"></small>
+            <input type="hidden" id="hid" value="" class="d-none" />
+        </div>
+        <div class="form-group" style="position: relative; left: -1em;">
+            <label class="lbl" for="txtMembershipName"> Max</label>
+            <input aria-describedby="Max1" class="form-control col-md-12" id="Max" name="Max" placeholder="Enter Max" tabindex="1" type="text" value="@Model.Max">
+            <small id="Max1" class="form-text text-muted d-none"></small>
+            <input type="hidden" id="hid" value="" class="d-none" />
+        </div>
+        <div class="form-group" style="position: relative; left: -1em;">
+            <label class="lbl" for="e"> Circle</label>
+
+            <small id="CircleID1" class="form-text text-muted d-none"></small>
+            @{
+                var list1 = new SelectList(Model.CircleList, "Code", "Circle");
+                <select aria-describedby="helpBL" class="form-control" id="OID" tabindex="4" asp-items="@list1" asp-for="@Model.CircleID">
+                    <option value="0"> :: Select Circle :: </option>
+                </select>
+
+            }
+        </div>
+        <div class="form-group" style="position: relative; left: -1em;">
+            <label class="lbl" for="Comm"> Commission</label>
+            <input aria-describedby="Comm1" class="form-control col-md-12" id="Comm" name="Comm" placeholder="Enter Commission" tabindex="1" type="text" value="@Model.Comm">
+            <small id="Comm1" class="form-text text-muted d-none"></small>
+
+        </div>
+        <div class="form-group">
+
+            <span class="input-group-text switch switch-sm bg-white align" style="float: left; position: relative; bottom: 0px; right: -134px;">
+                <input type="checkbox" name="CommType" class="switch" id="CommType" @Html.Raw(Model.CommType ? "checked='checked'" : "")>
+                <label for="CommType" class="font-weight-bold lbl">Commission Type</label>
+            </span>
+
+        </div>
+
+        <div class="form-group">
+
+            <span class="input-group-text switch switch-sm bg-white align" style="float: left; position: relative; bottom: 0px; right: -134px;">
+                <input type="checkbox" name="WithGST" class="switch" id="WithGST" @Html.Raw(Model.WithGST ? "checked='checked'" : "")>
+                <label for="WithGST" class="font-weight-bold lbl">WithGST</label>
+            </span>
+        </div>
+        <div class="form-group">
+            <span class="input-group-text switch switch-sm bg-white align" style="float: left; position: relative; bottom: 0px; right: -134px;">
+                <input type="checkbox" name="AmtType" class="switch" id="AmtType" @Html.Raw(Model.AmtType ? "checked='checked'" : "")>
+                <label for="AmtType" class="font-weight-bold lbl">AmtType</label>
+            </span>
+        </div>
+        <div class="form-group">
+            <span class="input-group-text switch switch-sm bg-white align" style="float: left; position: relative; bottom: 0px; right: -134px;">
+                <input type="checkbox" name="IsActive" class="switch" id="IsActive" @Html.Raw(Model.IsActive ? "checked='checked'" : "")>
+                <label for="IsActive" class="font-weight-bold lbl">IsActive</label>
+            </span>
+        </div>
+        <div class="col-sm-6">
+            <button class="btn btn-info btn-sm" onclick="SaveBCommissionSave()" id="btnBCommissionSave" tabindex="9">Save</button>
+        </div>
+        <div class="col-sm-6">
+        </div>
+    </div>
+</div>
+    <script>
+        function SaveBCommissionSave() {
+            debugger
+            selectdenom();
+                        var data = {
+                            Id: $('#Id').val(),
+                            Ind: $('#Ind').val(),
+                            BuyerId: $('#BuyerId').val(),
+                            OID: $('#OID').val(),
+
+                            DenominationID: 0,
+                            Min: $('#Min').val(),
+                            Max: $('#Max').val(),
+                            CircleID: $('#Max').val(),
+                            Comm: $('#Comm').val(),
+                            CommType: $('#CommType').is(':checked'),
+                            AmtType: $('#AmtType').is(':checked'),
+                            WithGST: $('#WithGST').is(':checked'),
+
+                            IsActive: $('#IsActive').is(':checked'),
+                            Denomination: denom.join(',')
+                        }
+
+
+
+
+                        $.post('/_BuyerCommissionInsertUpdate', data)
+                            .done(function (result) {
+                                resultReload(result);
+                                an.title = result.statuscode == an.type.success ? 'Success' : 'Oops';
+                                an.content = result.msg;
+                                an.alert(result.statuscode);
+                            })
+                            .fail(xhr => {
+                                an.title = 'Oops';
+                                an.content = xhr.status == 0 ? 'Internet Connection was broken' : 'Server error';
+                                an.alert(an.type.failed);
+                            }).always(() => preloader.remove());
+
+
+
+
+                    }
+        var denom = [];
+        function selectdenom()
+
+        {
+            $(".chkDenomination").each(function () {
+                if ($(this).is(':checked')) {
+                    denom.push($(this).val())
+                }
+               
+            });
+
+
+                   }
+
+
+    </script>

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using RoundpayFinTech.AppCode.DL;
 using RoundpayFinTech.AppCode.Interfaces.Exchange;
+using RoundpayFinTech.AppCode.Model;
 using RoundpayFinTech.AppCode.Model.Exchange;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,35 @@ namespace RoundpayFinTech.AppCode.MiddleLayer.Exchange
         {
             IProcedure proc = new ProcSettlementReport(_dal);
             return (List<Settlement>)proc.Call(req);
+        }
+
+
+        public IEnumerable<BuyerCommission> BuyerCommissionList(CommonReq req)
+        {
+
+          
+            IProcedure proc = new ProcBuyerCommission(_dal);
+           
+            return (List<BuyerCommission>)proc.Call(req);
+        }
+        public IEnumerable<SellerCommission> SellerCommissionList(CommonReq req)
+        {
+
+
+            IProcedure proc = new ProcSellerCommission(_dal);
+
+            return (List<SellerCommission>)proc.Call(req);
+        }
+        public ResponseStatus SellerCommissionInsertupdate(SellerCommission  data)
+        {
+            IProcedure proc = new ProcSellerCommissionUpdate(_dal);
+            return (ResponseStatus)proc.Call(data);
+        }
+
+        public ResponseStatus BuyerCommissionInsertupdate(BuyerCommission data)
+        {
+            IProcedure proc = new ProcBuyerCommissionUpdate(_dal);
+            return (ResponseStatus)proc.Call(data);
         }
     }
 }

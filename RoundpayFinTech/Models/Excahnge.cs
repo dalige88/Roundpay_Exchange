@@ -32,6 +32,8 @@ namespace RoundpayFinTech.AppCode.Model.Exchange
         public IEnumerable<DenominationVoucher> denominationsoucher { get; set; }
         public IEnumerable<CirlceMaster> CircleList { get; set; }
         public string Denomination { get; set; }
+        public string OpretorName{ get; set; }
+        public string CircleName { get; set; }
 
     }
     public class BuyerCommission: CommonCommission
@@ -55,4 +57,18 @@ public class SellerCommission: CommonCommission
 
 
 }
+
+    public class Commission_Denomination
+    {
+                              
+        public int ID            { get; set; }
+        public int CommissionID  { get; set; }
+        public string Type          { get; set; }
+        public int DenominationID{ get; set; }
+        public string DenominationName{ get; set; }
+        public int CircleID { get; set; }
+        public int OID { get; set; }
+        public decimal Amount { get; set; }
+
+    }
 }

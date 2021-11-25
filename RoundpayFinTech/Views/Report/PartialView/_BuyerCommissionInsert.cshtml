@@ -18,7 +18,7 @@
         <label class="lbl" for="">Choose Operator</label>
         @{
             var list = new SelectList(Model.OpDetail, "OID", "Name");
-            <select aria-describedby="helpBL" class="form-control" id="OID" tabindex="4" asp-items="@list" asp-for="@Model.OID">
+            <select aria-describedby="helpBL" class="form-control _loaddenom" id="OID" tabindex="4" asp-items="@list" asp-for="@Model.OID">
                 <option value="0"> :: Select Op :: </option>
             </select>
 
@@ -29,16 +29,11 @@
     <div class="form-group" style="position: relative; left: -1em;">
         <label class="lbl" for="txtMembershipName"> Denomination</label>
 
-        <div class="row mt-3">
-            @foreach (var itm in Model.denominationsoucher)
-            {
+        <div class="row mt-3" id="_denomid">
 
-                <div class="form-check col-md-4 my-check">
-                    <input type="checkbox" class="chkDenomination" value="@itm.DenominationID">
-                    <label class="form-check-label" for="exampleCheck1">@itm.DenminationAmount</label>
-                </div>
-
-            }
+            <select>
+                <option value="0" id="DenomitionID"> ::Select Op:: </option>
+            </select>
 
         </div>
         <div class="form-group" style="position: relative; left: -1em;">
@@ -59,7 +54,7 @@
             <small id="CircleID1" class="form-text text-muted d-none"></small>
             @{
                 var list1 = new SelectList(Model.CircleList, "Code", "Circle");
-                <select aria-describedby="helpBL" class="form-control" id="OID" tabindex="4" asp-items="@list1" asp-for="@Model.CircleID">
+                <select aria-describedby="helpBL" class="form-control _loaddenom" id="CircleID" tabindex="4" asp-items="@list1" asp-for="@Model.CircleID">
                     <option value="0"> :: Select Circle :: </option>
                 </select>
 
@@ -108,8 +103,8 @@
 </div>
     <script>
         function SaveBCommissionSave() {
-            debugger
-            selectdenom();
+                        debugger
+                        selectdenom();
                         var data = {
                             Id: $('#Id').val(),
                             Ind: $('#Ind').val(),
@@ -126,7 +121,7 @@
                             WithGST: $('#WithGST').is(':checked'),
 
                             IsActive: $('#IsActive').is(':checked'),
-                            Denomination: denom.join(',')
+                            Denomination: $('#DenomitionID').val().join(',')
                         }
 
 
@@ -138,6 +133,8 @@
                                 an.title = result.statuscode == an.type.success ? 'Success' : 'Oops';
                                 an.content = result.msg;
                                 an.alert(result.statuscode);
+
+                                mdlA.dispose()
                             })
                             .fail(xhr => {
                                 an.title = 'Oops';
@@ -145,23 +142,62 @@
                                 an.alert(an.type.failed);
                             }).always(() => preloader.remove());
 
+                        loadPartial1()
 
 
 
                     }
         var denom = [];
-        function selectdenom()
+                function selectdenom() {
+                    $(".chkDenomination").each(function () {
+                        if ($(this).is(':checked')) {
+                            denom.push($(this).val())
+                        }
 
-        {
-            $(".chkDenomination").each(function () {
-                if ($(this).is(':checked')) {
-                    denom.push($(this).val())
+                    });
+
+
                 }
-               
-            });
 
 
-                   }
+                function loadDenom(oi, ci) {
 
 
+
+                   
+
+                        $.post(`/DECommission_DenominationList/${oi}/${ci}`).done(function (result) {
+
+                            debugger
+                            $('#_denomid').empty().append(result)
+
+
+
+                        }).catch(function (xhr, e, msg) {
+                            an.title = 'Oops';
+                            an.content = 'An error has been occured during request.Reload again!'
+                            an.alert(an.type.failed);
+                        }).fail(() => {
+                            an.title = 'Oops';
+                            an.content = xhr.status == 500 ? 'Server error' : 'Internet Connection was broken';
+                            an.alert(an.type.failed);
+                        }).always(() => {});
+
+
+
+
+
+                    }
+             
+
+                $('._loaddenom').change(function () {
+                 var  oid= $("#OID").val()
+                  var cir= $("#CircleID").val()
+
+                    if (oid > 0 && cir > 0) {
+                        loadDenom(oid, cir)
+                    }
+
+
+                })
     </script>

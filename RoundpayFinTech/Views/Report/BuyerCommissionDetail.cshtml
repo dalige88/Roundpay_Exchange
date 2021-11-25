@@ -13,6 +13,7 @@
         }
     </style>
 }
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <div aria-label="breadcrumb" class="breadcrumb" id="page-header">
     <div class="container-fluid">
         <h5 class="float-left"><i class="fa fa-users"></i> @ViewData["Title"]</h5>
@@ -58,42 +59,43 @@
 
 
     @section scripts{
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
 
         $(document).ready(function () { loadPartial1() });
         $('#btnNew').click(function () {
-          
+
             $.get('/_BuyerCommissionInsert/0')
-                    .done(function (result) {
-                        mdlA.title = "Buyer Commission Insert"
-                        mdlA.content = result;
-                        mdlA.id = '1mymodal';
-                        mdlA.options.backdrop = 'static';
-                        mdlA.modal(mdlA.size.default);
-                    })
-                    .catch(function (xhr, e, msg) {
+                .done(function (result) {
+                    mdlA.title = "Buyer Commission Insert"
+                    mdlA.content = result;
+                    mdlA.id = '1mymodal';
+                    mdlA.options.backdrop = 'static';
+                    mdlA.modal(mdlA.size.default);
+                })
+                .catch(function (xhr, e, msg) {
+                    an.title = 'Oops';
+                    an.content = 'An error has been occured during request.Reload again!'
+                    an.alert(an.type.failed);
+                })
+                .fail(function (xhr) {
+                    if (xhr.status == 500) {
                         an.title = 'Oops';
-                        an.content = 'An error has been occured during request.Reload again!'
+                        an.content = 'Server error';
                         an.alert(an.type.failed);
-                    })
-                    .fail(function (xhr) {
-                        if (xhr.status == 500) {
-                            an.title = 'Oops';
-                            an.content = 'Server error';
-                            an.alert(an.type.failed);
-                        }
-                        if (xhr.status == 0) {
-                            an.title = 'Oops';
-                            an.content = 'Internet Connection was broken';
-                            an.alert(an.type.failed);
-                        }
-                    })
-                    .always(function () {
-                        preloader.remove();
-                    });
+                    }
+                    if (xhr.status == 0) {
+                        an.title = 'Oops';
+                        an.content = 'Internet Connection was broken';
+                        an.alert(an.type.failed);
+                    }
+                })
+                .always(function () {
+                    preloader.remove();
+                });
 
 
-           
+
 
 
 
@@ -109,7 +111,7 @@
         };
 
 
-        
+
 
 
 

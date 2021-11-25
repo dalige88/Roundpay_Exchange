@@ -7,9 +7,12 @@
                 <th>#</th>
                 <th>Action</th>
                 <th>OID</th>
+                <th>Circle</th>
                 <th>Index</th>
                 <th>Min</th>
                 <th>Max</th>
+                <th>Denomination</th>
+
                 <th>Amount Type</th>
                 <th>With Gst</th>
                 <th>IsActive</th>
@@ -28,7 +31,7 @@
                                     <a href="#" id="act_@count" class="btn btn-outline-dark btn-sm btn-block dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expaned="false"></a>
                                     <div class="dropdown-menu" aria-labelledby="act">
                                         <h6 class="dropdown-header">Action Menu</h6>
-                                        <a href="#" class="dropdown-item">Edit</a>
+                                        <a href="#" onclick="UpdateBuyerCom(@item.Id)" class="dropdown-item">Edit</a>
 
                                     </div>
                                 </div>
@@ -37,7 +40,10 @@
 
                             </td>
                             <td>
-                                @item.OID
+                                @item.OpretorName
+                            </td>
+                            <td>
+                                @item.CircleName
                             </td>
                             <td>
                                 @item.Ind
@@ -48,7 +54,9 @@
                             <td>
                                 @item.Max
                             </td>
-
+                            <td>
+                                @item.Denomination
+                            </td>
                             <td>
                                 @item.AmtType
                             </td>
@@ -124,3 +132,44 @@
     }
 
 </script>*@
+
+<script>
+    function UpdateBuyerCom(Id)
+    {
+        $.get(`/_BuyerCommissionInsert/${Id}`)
+            .done(function (result) {
+                mdlA.title = "Buyer Commission Update."
+                mdlA.content = result;
+                mdlA.id = '1mymodal';
+                mdlA.options.backdrop = 'static';
+                mdlA.modal(mdlA.size.default);
+            })
+            .catch(function (xhr, e, msg) {
+                an.title = 'Oops';
+                an.content = 'An error has been occured during request.Reload again!'
+                an.alert(an.type.failed);
+            })
+            .fail(function (xhr) {
+                if (xhr.status == 500) {
+                    an.title = 'Oops';
+                    an.content = 'Server error';
+                    an.alert(an.type.failed);
+                }
+                if (xhr.status == 0) {
+                    an.title = 'Oops';
+                    an.content = 'Internet Connection was broken';
+                    an.alert(an.type.failed);
+                }
+            })
+            .always(function () {
+                preloader.remove();
+            });
+
+
+
+
+
+    }
+
+
+</script>

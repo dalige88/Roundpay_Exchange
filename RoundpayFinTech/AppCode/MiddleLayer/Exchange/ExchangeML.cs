@@ -37,8 +37,16 @@ namespace RoundpayFinTech.AppCode.MiddleLayer.Exchange
 
           
             IProcedure proc = new ProcBuyerCommission(_dal);
-           
-            return (List<BuyerCommission>)proc.Call(req);
+            IProcedure proc1 = new ProcGetDenom(_dal);
+            var ret = (List<BuyerCommission>)proc.Call(req);
+           foreach(var itm in ret)
+            {
+                itm.Denomination = (string)proc1.Call(new CommonReq { UserID=itm.Id,CommonStr="B"});
+
+            }
+
+
+            return ret;
         }
         public IEnumerable<SellerCommission> SellerCommissionList(CommonReq req)
         {
@@ -59,5 +67,15 @@ namespace RoundpayFinTech.AppCode.MiddleLayer.Exchange
             IProcedure proc = new ProcBuyerCommissionUpdate(_dal);
             return (ResponseStatus)proc.Call(data);
         }
+
+        public IEnumerable<Commission_Denomination> DECommission_DenominationList(CommonReq req)
+        {
+
+
+            IProcedure proc = new ProcDenominationCircleAndOpwise(_dal);
+            var ret = (List<Commission_Denomination>)proc.Call(req);
+            return ret;
+        }
+
     }
 }

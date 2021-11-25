@@ -127,7 +127,7 @@ namespace RoundpayFinTech.Controllers
 
             }
             res.OpDetail = OpML.GetOperators(0);
-            res.denominationsoucher = coupanVoucherML.GetDenominationVoucher();
+       
             res.CircleList = OpML.CircleList().Result;
             return PartialView("PartialView/_BuyerCommissionInsert",res);
         }
@@ -169,6 +169,18 @@ namespace RoundpayFinTech.Controllers
             return Json(res);
 
         }
+        [HttpPost]
+        [Route("/DECommission_DenominationList/{oid}/{circle}")]
+        public IActionResult DECommission_DenominationList(int oid,int circle)
+        {
+
+            IExchangeML re = new ExchangeML(_accessor, _env);
+            var res = re.DECommission_DenominationList(new Fintech.AppCode.Model.CommonReq() { CommonInt = oid, CommonInt2 = circle });
+
+            return PartialView("PartialView/_CommissionDenominationList", res );
+        }
+
+
 
     }
 }

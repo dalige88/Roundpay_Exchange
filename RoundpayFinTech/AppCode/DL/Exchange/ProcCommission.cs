@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace RoundpayFinTech.AppCode.DL
 {
@@ -44,7 +45,9 @@ namespace RoundpayFinTech.AppCode.DL
                         Ind =item["_Ind"] is DBNull ? 0 : Convert.ToInt32(item["_Ind"]),
                         BuyerId= item["_BuyerId"] is DBNull ? 0 : Convert.ToInt32(item["_BuyerId"]),
                         CommType=item["_CommType"] is DBNull ? false : Convert.ToBoolean(item["_CommType"]),
-                        AmtType =item["_AmtType"] is DBNull ? false : Convert.ToBoolean(item["_AmtType"])
+                        AmtType =item["_AmtType"] is DBNull ? false : Convert.ToBoolean(item["_AmtType"]),
+                        OpretorName= item["_OIDName"] is DBNull ? "" : Convert.ToString(item["_OIDName"]),
+                        CircleName = item["_CircleName"] is DBNull ? "" : Convert.ToString(item["_CircleName"])
 
 
                     });
@@ -55,7 +58,7 @@ namespace RoundpayFinTech.AppCode.DL
 
         public object Call() => throw new NotImplementedException();
 
-        public string GetName() => @"select * from BuyerCommissionDetail where (_BuyerId=@BuyerId or @BuyerId<0)and (_Id=@Id or @Id<0)";
+        public string GetName() => @"select o._Name '_OIDName',c._name '_CircleName' , b.* from BuyerCommissionDetail B left join tbl_Operator O on B._OID=o._Id left join tbl_Circle C on B._CircleID=c._ID  where (b._BuyerId=@BuyerId or @BuyerId<0)and (b._Id=@Id or @Id<0)";
     }
 
 
@@ -238,6 +241,77 @@ namespace RoundpayFinTech.AppCode.DL
         public string GetName() => "proc_UpdateBuyerCommission";
     }
 
-    
+    public class ProcGetDenom : IProcedure
+    {
+        private readonly IDAL _dal;
+        public ProcGetDenom(IDAL dal) => _dal = dal;
+
+        public object Call(object obj)
+        {
+            var req = (CommonReq)obj;
+            var res = "";
+            SqlParameter[] param = {
+                new SqlParameter("@CommissionID",req.UserID),
+                new SqlParameter("@Type",req.CommonStr)
+            };
+            var dt = _dal.Get(GetName(), param);
+            if (dt.Rows.Count > 0)
+            {
+              
+
+                res = string.Join(", ", dt.Rows.OfType<DataRow>().Select(r => r["_Amount"].ToString()));
+            }
+            return res;
+        }
+
+        public object Call() => throw new NotImplementedException();
+
+        public string GetName() => @"select d._Amount,m.* from [Exchange].[tbl_Commission_DenominationMap] m left join MASTER_DENOMINATION D on  d._ID=m._DenominationID where m._Type=@Type and m._CommissionID=@CommissionID";
+    }
+
+
+
+    public class ProcDenominationCircleAndOpwise : IProcedure
+    {
+        private readonly IDAL _dal;
+        public ProcDenominationCircleAndOpwise(IDAL dal) => _dal = dal;
+       
+        public object Call(object obj)
+        {
+
+            var res1 = new List<Commission_Denomination>();
+            var req = (CommonReq)obj;
+            
+            SqlParameter[] param = {
+                new SqlParameter("@OID",req.CommonInt),
+                new SqlParameter("@CircleID",req.CommonInt2)
+            };
+            var dt = _dal.Get(GetName(), param);
+            if (dt.Rows.Count > 0)
+            {
+              
+
+          
+     foreach (DataRow item in dt.Rows)
+                {
+                    res1.Add(new Commission_Denomination
+                    {
+                        DenominationID = item["_DenomID"] is DBNull ? 0 : Convert.ToInt32(item["_DenomID"]),
+                        CircleID = item["_CircleID"] is DBNull ? 0 : Convert.ToInt32(item["_CircleID"]),
+                        OID = item["_OID"] is DBNull ? 0 : Convert.ToInt32(item["_OID"]),
+                        Amount = item["_Amount"] is DBNull ? 0 : Convert.ToDecimal(item["_Amount"])
+                    });
+                }
+
+
+
+            }
+            return res1;
+        }
+
+        public object Call() => throw new NotImplementedException();
+
+        public string GetName() => @"select d.*,m._Amount from tbl_DenominationCircleAndOpwise D left Join  MASTER_DENOMINATION M on D._DenomId=M._ID where _OID=@OID and _CircleID=@CircleID";
+    }
 
 }

@@ -15,5 +15,6 @@ namespace RoundpayFinTech.AppCode.Interfaces.Exchange
         IEnumerable<BuyerCommission> BuyerCommissionList(CommonReq req);
         IEnumerable<SellerCommission> SellerCommissionList(CommonReq req);
         IEnumerable<Settlement> SettlementReport(CommonReq req);
+        IEnumerable<Commission_Denomination> DECommission_DenominationList(CommonReq req);
     }
 }
